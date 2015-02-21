@@ -409,15 +409,21 @@ namespace Mpdn.PlayerExtensions
                 case "ActiveAudioTrack":
                     PlayerControl.VideoPanel.BeginInvoke((MethodInvoker)(() => SetAudioTrack(command[1])));
                     break;
-                //case "AddFilesToPlaylist":
-                //    AddFilesToPlaylist(command[1]);
-                //    break;
-                //case "ClearPlaylist":
-                //    PlayerControl.VideoPanel.BeginInvoke((MethodInvoker)(ClearPlaylist));
-                //    break;
-                //case "FocusPlayer":
-                //    PlayerControl.VideoPanel.BeginInvoke((MethodInvoker)(FocusMpdn));
-                //    break;
+                case "MoveWindow":
+                    PlayerControl.Form.BeginInvoke((MethodInvoker) (() => MoveWindow(command.Skip(1).ToArray())));
+                    break;
+                case "Borderless":
+                    PlayerControl.Form.BeginInvoke((MethodInvoker) (Borderless));
+                    break;
+                    //case "AddFilesToPlaylist":
+                    //    AddFilesToPlaylist(command[1]);
+                    //    break;
+                    //case "ClearPlaylist":
+                    //    PlayerControl.VideoPanel.BeginInvoke((MethodInvoker)(ClearPlaylist));
+                    //    break;
+                    //case "FocusPlayer":
+                    //    PlayerControl.VideoPanel.BeginInvoke((MethodInvoker)(FocusMpdn));
+                    //    break;
             }
         }
 
@@ -521,6 +527,39 @@ namespace Mpdn.PlayerExtensions
             {
                 PlayerControl.GoWindowed();
             }
+        }
+
+        private void MoveWindow(string[] args)
+        {
+            int left, top, width, height;
+            if (int.TryParse(args[0], out left) &&
+                int.TryParse(args[1], out top) &&
+                int.TryParse(args[2], out width) &&
+                int.TryParse(args[3], out height))
+            {
+                PlayerControl.Form.Left = left;
+                PlayerControl.Form.Top = top;
+                PlayerControl.Form.Width = width;
+                PlayerControl.Form.Height = height;
+
+                switch (args[4])
+                {
+                    case "Normal":
+                        PlayerControl.Form.WindowState = FormWindowState.Normal;
+                        break;
+                    case "Maximized":
+                        PlayerControl.Form.WindowState = FormWindowState.Maximized;
+                        break;
+                    case "Minimized":
+                        PlayerControl.Form.WindowState = FormWindowState.Minimized;
+                        break;
+                }
+            }
+        }
+
+        private void Borderless()
+        {
+            PlayerControl.Form.FormBorderStyle = PlayerControl.Form.FormBorderStyle == FormBorderStyle.None ? FormBorderStyle.Sizable : FormBorderStyle.None;
         }
 
         private void PushToAllListeners(string msg)
