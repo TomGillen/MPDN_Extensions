@@ -33,7 +33,7 @@ namespace Mpdn.PlayerExtensions
         public override async void Initialize()
         {
             base.Initialize();
-
+            
             var success = await SendHandshake();
             if (success)
             {

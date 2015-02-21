@@ -592,7 +592,7 @@ namespace Mpdn.PlayerExtensions
         {
             try
             {
-                PushToAllListeners("Postion|" + PlayerControl.MediaPosition);
+                PushToAllListeners("Position|" + PlayerControl.MediaPosition);
             }
             catch (Exception)
             { }
