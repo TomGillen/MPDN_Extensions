@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
-using Mpdn.PlayerExtensions;
+using System.Windows.Forms;
 
 namespace Mpdn.PlayerExtensions
 {
@@ -33,11 +31,11 @@ namespace Mpdn.PlayerExtensions
         public override async void Initialize()
         {
             base.Initialize();
-            
-            var success = await SendHandshake();
+
+            bool success = await SendHandshake();
             if (success)
             {
-                PlayerControl.Form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                PlayerControl.Form.FormBorderStyle = FormBorderStyle.None;
                 PlayerControl.Form.TopMost = false;
             }
         }
@@ -51,11 +49,11 @@ namespace Mpdn.PlayerExtensions
                 socket.Connect(address);
 
                 using (var stream = new NetworkStream(socket))
-                using (var writer = new StreamWriter(stream) { AutoFlush = true })
+                using (var writer = new StreamWriter(stream) {AutoFlush = true})
                 using (var reader = new StreamReader(stream))
                 {
                     await writer.WriteLineAsync("Handshake");
-                    var response = await reader.ReadLineAsync();
+                    string response = await reader.ReadLineAsync();
                     return response == "OK";
                 }
             }
